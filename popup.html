@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Budgee Forecast</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<body>
+  <h1>Spend Forecast</h1>
+  <input type="file" id="fileInput" />
+  <button id="analyzeBtn">Analyze</button>
+  <div id="results"></div>
+
+  <hr>
+  <label for="goalInput">Monthly Budget Goal:</label>
+  <input type="number" id="goalInput" placeholder="$1000">
+  <button id="saveGoal">Save Goal</button>
+
+  <script src="popup.js"></script>
+  <canvas id="categoryChart" width="300" height="200"></canvas>
+  <button id="downloadChart">Download Chart</button>
+
+
+</body>
+
+</html>
