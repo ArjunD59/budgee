@@ -181,7 +181,10 @@ function getStoredGoal(callback) {
 let chartInstance = null;
 
 function renderChart(totals) {
-    const ctx = document.getElementById('categoryChart').getContext('2d');
+    const canvas = document.getElementById('categoryChart');
+    if (!canvas || typeof Chart === 'undefined') return;  // no chart on this page
+    document.body.classList.add('has-chart');
+    const ctx = canvas.getContext('2d');
     const categories = Object.keys(totals);
     const amounts = Object.values(totals);
 
@@ -209,7 +212,8 @@ function renderChart(totals) {
         }
     });
 
-    document.getElementById("downloadChart").addEventListener("click", () => {
+    // onclick (not addEventListener) so re-running the analysis doesn't stack downloads
+    document.getElementById("downloadChart").onclick = () => {
         const canvas = document.getElementById("categoryChart");
         const image = canvas.toDataURL("image/png");
 
@@ -217,7 +221,7 @@ function renderChart(totals) {
         link.href = image;
         link.download = "spending_chart.png";
         link.click();
-    });
+    };
 
 }
 

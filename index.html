@@ -1,14 +1,93 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Budgee Forecast</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <!-- you can paste your popup.html body here -->
-    <h1>Spend Forecast</h1>
-    ...
-    <script src="popup.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Budgee Forecast</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* website only: center the app column */
+    body { margin: 40px auto; }
+    #categoryChart { display: none; margin-top: 16px; background: rgba(255,255,255,0.06); border-radius: 6px; }
+    #downloadChart { display: none; }
+    .has-chart #categoryChart, .has-chart #downloadChart { display: block; }
+    .sample-btn { background: transparent; border: 1px solid #e0e0e0; color: #e0e0e0; }
+  </style>
+</head>
+<body>
+  <!-- Modal Overlay -->
+  <div id="welcomeModal" class="modal">
+    <div class="modal-content">
+      <h2>Welcome to Budgee Forecast</h2>
+      <p>This tool helps you forecast your monthly spending and stay within your budget.</p>
+
+      <h3>Required CSV Format</h3>
+      <p>Please upload a CSV file with the following columns:</p>
+      <div style="background:#f4f4f4; padding:10px; border-radius:4px; text-align:left; font-family:monospace;">
+        date,category,amount<br>
+        2025-06-01,Groceries,120.50<br>
+        2025-06-03,Coffee,4.75<br>
+        2025-06-05,Transport,30.00
+      </div>
+
+      <br>
+      <button id="closeModal">I Understand</button>
+    </div>
+  </div>
+
+  <!-- Main Popup UI -->
+  <h1>Spend Forecast</h1>
+
+  <label for="fileInput">Upload CSV:</label>
+  <input type="file" id="fileInput" accept=".csv">
+
+  <button id="analyzeBtn">Analyze</button>
+  <button id="sampleBtn" class="sample-btn">Try it with sample data</button>
+
+  <div id="results"></div>
+
+  <canvas id="categoryChart" width="300" height="220" aria-label="Spending by category chart"></canvas>
+  <button id="downloadChart">Download chart</button>
+
+  <hr>
+
+  <label for="goalInput">Monthly Budget Goal:</label>
+  <input type="number" id="goalInput" placeholder="$1000">
+
+  <button id="saveGoal">Save Goal</button>
+
+  <!-- Chart library for the spending chart -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <!-- Main popup logic -->
+  <script src="popup.js"></script>
+
+  <!-- Website only: load the sample CSV so visitors can try it without their own file -->
+  <script>
+    document.getElementById("sampleBtn").addEventListener("click", async () => {
+      const res = await fetch("sample.csv");
+      const file = new File([await res.text()], "sample.csv", { type: "text/csv" });
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById("fileInput").files = dt.files;
+      document.getElementById("analyzeBtn").click();
+    });
+  </script>
+
+  <!-- Modal behavior -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const modal = document.getElementById("welcomeModal");
+      const closeBtn = document.getElementById("closeModal");
+
+      if (modal && closeBtn) {
+        // Show modal when popup opens
+        modal.style.display = "flex";
+
+        closeBtn.addEventListener("click", () => {
+          modal.style.display = "none";
+        });
+      }
+    });
+  </script>
+</body>
 </html>
