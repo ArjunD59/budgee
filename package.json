@@ -1,0 +1,8 @@
+{
+  "name": "budgee",
+  "private": true,
+  "scripts": {
+    "test": "node --test test/engine.test.js",
+    "sample": "node tools/make-sample.js"
+  }
+}

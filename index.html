@@ -1,93 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Budgee Forecast</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* website only: center the app column */
-    body { margin: 40px auto; }
-    #categoryChart { display: none; margin-top: 16px; background: rgba(255,255,255,0.06); border-radius: 6px; }
-    #downloadChart { display: none; }
-    .has-chart #categoryChart, .has-chart #downloadChart { display: block; }
-    .sample-btn { background: transparent; border: 1px solid #e0e0e0; color: #e0e0e0; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Budgee · Know before you overspend</title>
+<meta name="description" content="Budgee forecasts your month-end spending from your bank transactions and warns you before you go over budget. Free, and your data never leaves your browser.">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
 </head>
 <body>
-  <!-- Modal Overlay -->
-  <div id="welcomeModal" class="modal">
-    <div class="modal-content">
-      <h2>Welcome to Budgee Forecast</h2>
-      <p>This tool helps you forecast your monthly spending and stay within your budget.</p>
 
-      <h3>Required CSV Format</h3>
-      <p>Please upload a CSV file with the following columns:</p>
-      <div style="background:#f4f4f4; padding:10px; border-radius:4px; text-align:left; font-family:monospace;">
-        date,category,amount<br>
-        2025-06-01,Groceries,120.50<br>
-        2025-06-03,Coffee,4.75<br>
-        2025-06-05,Transport,30.00
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Budgee home"><img src="assets/icon.svg" alt="" width="28" height="28"><span>Budgee</span></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#try">Try it</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+    <a class="btn btn-small" href="#try">Get my forecast</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero: the thesis, with a live forecast computed from sample data -->
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">Spending forecast for your month</p>
+      <h1>Know you'll overspend <em>before</em> the month ends.</h1>
+      <p class="lede">Budgee reads your recent bank transactions, learns your habits and regular bills, and predicts where your month will land. You get a clear warning and a plan while there's still time to fix it.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#try">Upload my transactions</a>
+        <button class="btn btn-ghost" type="button" data-action="sample">See it with sample data</button>
+      </div>
+      <p class="fine">Free · No sign-up · Your file never leaves your browser</p>
+    </div>
+    <div class="hero-demo" aria-label="Example forecast">
+      <div class="demo-card">
+        <div class="demo-head">
+          <span class="demo-label">October forecast</span>
+          <span class="pill pill-bad" id="demoPill">Over budget</span>
+        </div>
+        <div class="demo-num"><span id="demoProj">$0</span><small id="demoOf">of $2,200 budget</small></div>
+        <div class="demo-chart" id="demoChart"></div>
+        <p class="demo-tip" id="demoTip"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works: real sequence, so numbered -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">Three steps, about two minutes. You only need a file from your bank.</p>
+      <ol class="steps">
+        <li class="step">
+          <span class="step-n">1</span>
+          <h3>Download your transactions</h3>
+          <p>Sign in to your bank or card's website, open your account activity, and look for <strong>Download</strong> or <strong>Export</strong>. Pick <strong>CSV</strong> and choose the last <strong>2 to 3 months</strong>. More history makes the forecast sharper.</p>
+        </li>
+        <li class="step">
+          <span class="step-n">2</span>
+          <h3>Drop the file into Budgee</h3>
+          <p>Drag it into the box below and type your monthly budget. Budgee sorts purchases into categories, spots your regular bills, and ignores transfers and paychecks.</p>
+        </li>
+        <li class="step">
+          <span class="step-n">3</span>
+          <h3>Read your forecast</h3>
+          <p>See where your month is headed, how likely you are to go over, how much you can safely spend each day, and the few changes that would make the biggest difference.</p>
+        </li>
+      </ol>
+
+      <details class="format">
+        <summary>What does my file need? <span>Most bank exports work as they are.</span></summary>
+        <div class="format-body">
+          <table class="format-table">
+            <thead><tr><th>Column</th><th>Needed?</th><th>Example</th><th>What Budgee does with it</th></tr></thead>
+            <tbody>
+              <tr><td><code>date</code></td><td><span class="pill pill-bad">Required</span></td><td><code>2026-10-14</code> or <code>10/14/2026</code></td><td>Places each purchase on the calendar</td></tr>
+              <tr><td><code>amount</code></td><td><span class="pill pill-bad">Required</span></td><td><code>-12.50</code> or <code>$12.50</code></td><td>Spending and income can share one column. Separate <code>debit</code> and <code>credit</code> columns work too.</td></tr>
+              <tr><td><code>description</code></td><td><span class="pill">Optional</span></td><td><code>STARBUCKS #4471</code></td><td>Sorts purchases into categories and finds repeating bills</td></tr>
+              <tr><td><code>category</code></td><td><span class="pill">Optional</span></td><td><code>Groceries</code></td><td>Used as-is when your bank provides it</td></tr>
+            </tbody>
+          </table>
+          <p class="fine">No bank export? Start from the template, fill in a row per purchase in any spreadsheet app, and save it as CSV.</p>
+          <button class="btn btn-ghost btn-small" type="button" data-action="template">Download the template</button>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- The tool -->
+  <section class="try" id="try">
+    <div class="wrap">
+      <h2 class="section-title">Get your forecast</h2>
+      <form class="upload" id="uploadForm" novalidate>
+        <label class="drop" id="drop" for="fileInput">
+          <input type="file" id="fileInput" accept=".csv,text/csv,.txt">
+          <span class="drop-icon" aria-hidden="true"></span>
+          <span class="drop-main" id="dropMain">Drop your CSV here, or <u>choose a file</u></span>
+          <span class="drop-sub" id="dropSub">Transactions from the last 2 to 3 months</span>
+        </label>
+        <div class="upload-side">
+          <label class="field" for="budgetInput">
+            <span>Monthly budget</span>
+            <span class="money-input"><span aria-hidden="true">$</span><input type="number" id="budgetInput" inputmode="decimal" min="0" step="10" placeholder="2000"></span>
+            <small>Everything you plan to spend this month, rent included.</small>
+          </label>
+          <button class="btn btn-wide" type="submit" id="analyzeBtn">Forecast my month</button>
+          <button class="btn btn-ghost btn-wide" type="button" data-action="sample">Use sample data instead</button>
+        </div>
+      </form>
+      <div class="notice" id="notice" role="status" hidden></div>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section class="dash" id="dashboard" hidden>
+    <div class="wrap">
+      <div class="dash-head">
+        <div>
+          <p class="eyebrow" id="dashAsOf"></p>
+          <h2 class="verdict" id="verdict"></h2>
+          <p class="verdict-sub" id="verdictSub"></p>
+        </div>
+        <button class="btn btn-ghost btn-small" type="button" id="newFile">Use a different file</button>
       </div>
 
-      <br>
-      <button id="closeModal">I Understand</button>
+      <div class="kpis">
+        <div class="kpi"><span class="kpi-label">Spent so far</span><span class="kpi-num" id="kSpent"></span><span class="kpi-sub" id="kSpentSub"></span></div>
+        <div class="kpi"><span class="kpi-label">Projected month-end</span><span class="kpi-num" id="kProj"></span><span class="kpi-sub" id="kProjSub"></span></div>
+        <div class="kpi"><span class="kpi-label">Chance of going over</span><span class="kpi-num" id="kOdds"></span><span class="kpi-sub" id="kOddsSub"></span></div>
+        <div class="kpi"><span class="kpi-label">Safe to spend</span><span class="kpi-num" id="kSafe"></span><span class="kpi-sub" id="kSafeSub"></span></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>Your month so far, and where it's headed</h3>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="chart" id="mainChart"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><h3>What to do about it</h3></div>
+          <ul class="insights" id="insights"></ul>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>By category</h3><span class="panel-note">Bar: projected this month · tick: your typical month</span></div>
+          <div class="cats" id="cats"></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head"><h3>Regular bills Budgee found</h3><span class="panel-note" id="billsNote"></span></div>
+          <ul class="bills" id="bills"></ul>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>This month's purchases</h3><input type="search" class="search" id="txSearch" placeholder="Search" aria-label="Search purchases"></div>
+          <p class="panel-note">Wrong category? Change it and the forecast updates.</p>
+          <div class="tx-wrap"><table class="tx"><colgroup><col class="c-d"><col><col class="c-cat"><col class="c-amt"></colgroup><tbody id="txBody"></tbody></table></div>
+        </div>
+      </div>
+      <p class="fine center" id="warnings"></p>
     </div>
+  </section>
+
+  <section class="privacy" id="privacy">
+    <div class="wrap privacy-in">
+      <h2 class="section-title">Your money data stays with you</h2>
+      <p>Budgee runs entirely in your browser. Your file is read on your device, the forecast is calculated on your device, and nothing is uploaded, stored, or shared. Close the tab and it's gone. Only your budget amount is remembered, so you don't have to retype it.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span><img src="assets/icon.svg" alt="" width="18" height="18"> Budgee</span>
+    <span>Built by <a href="https://arjundharanikumar.netlify.app/" target="_blank" rel="noopener">Arjun Dharanikumar</a> · <a href="https://github.com/ArjunD59/budgee" target="_blank" rel="noopener">GitHub</a></span>
+    <span class="fine">Forecasts are estimates, not financial advice.</span>
   </div>
+</footer>
 
-  <!-- Main Popup UI -->
-  <h1>Spend Forecast</h1>
+<div class="toast" id="toast" role="status" hidden></div>
 
-  <label for="fileInput">Upload CSV:</label>
-  <input type="file" id="fileInput" accept=".csv">
-
-  <button id="analyzeBtn">Analyze</button>
-  <button id="sampleBtn" class="sample-btn">Try it with sample data</button>
-
-  <div id="results"></div>
-
-  <canvas id="categoryChart" width="300" height="220" aria-label="Spending by category chart"></canvas>
-  <button id="downloadChart">Download chart</button>
-
-  <hr>
-
-  <label for="goalInput">Monthly Budget Goal:</label>
-  <input type="number" id="goalInput" placeholder="$1000">
-
-  <button id="saveGoal">Save Goal</button>
-
-  <!-- Chart library for the spending chart -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  <!-- Main popup logic -->
-  <script src="popup.js"></script>
-
-  <!-- Website only: load the sample CSV so visitors can try it without their own file -->
-  <script>
-    document.getElementById("sampleBtn").addEventListener("click", async () => {
-      const res = await fetch("sample.csv");
-      const file = new File([await res.text()], "sample.csv", { type: "text/csv" });
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      document.getElementById("fileInput").files = dt.files;
-      document.getElementById("analyzeBtn").click();
-    });
-  </script>
-
-  <!-- Modal behavior -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const modal = document.getElementById("welcomeModal");
-      const closeBtn = document.getElementById("closeModal");
-
-      if (modal && closeBtn) {
-        // Show modal when popup opens
-        modal.style.display = "flex";
-
-        closeBtn.addEventListener("click", () => {
-          modal.style.display = "none";
-        });
-      }
-    });
-  </script>
+<script src="js/engine.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
