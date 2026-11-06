@@ -15,7 +15,7 @@ test('reads the old Budgee format (date,category,amount)', () => {
 test('reads a bank export: negative spending, income, transfers, quotes', () => {
   const csv = 'Transaction Date,Description,Amount\n' +
     '10/01/2026,"PAYROLL DIRECT DEP",1200.00\n' +
-    '10/02/2026,"STARBUCKS #123, NEW BRUNSWICK",-5.75\n' +
+    '10/02/2026,"STARBUCKS #123, MAIN ST",-5.75\n' +
     '10/03/2026,"CHASE CREDIT CARD PAYMENT",-400.00\n' +
     '10/04/2026,"TRADER JOE\'S #612",-64.10\n' +
     '10/05/2026,"UBER   TRIP",($18.20)\n';
@@ -50,7 +50,7 @@ test('sample forecast: finds bills, one-offs, and stays sensible', () => {
   const R = E.analyze(p, { budget: 2200 });
   assert.strictEqual(R.asOf, '2026-10-17');
   const names = R.recurring.map((r) => r.name);
-  for (const n of ['Netflix', 'Spotify', 'PSE&G Electric']) assert.ok(names.includes(n), n);
+  for (const n of ['Netflix', 'Spotify', 'City Electric Co']) assert.ok(names.includes(n), n);
   assert.ok(!names.some((n) => /starbucks|chipotle/i.test(n)), 'everyday merchants are not bills');
   assert.ok(R.upcoming.some((u) => u.name === 'Geico Insurance'), 'insurance on the 24th is still to come');
   assert.ok(R.unusual.some((u) => /best buy/i.test(u.description)));

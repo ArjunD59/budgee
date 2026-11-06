@@ -103,7 +103,7 @@
     ['Health', /pharmacy|cvs|walgreens|rite aid|doctor|dental|clinic|hospital|medical|copay|urgent care|optometr/],
     ['Fitness', /gym|planet fitness|la fitness|crunch|equinox|yoga|peloton|fitness|climbing/],
     ['Travel', /airline|delta|united|jetblue|american air|southwest|spirit air|hotel|marriott|hilton|airbnb|expedia|booking\.com/],
-    ['Education', /tuition|bookstore|textbook|chegg|coursera|udemy|university|college|rutgers/],
+    ['Education', /tuition|bookstore|textbook|chegg|coursera|udemy|university|college/],
     ['Insurance', /insurance|geico|progressive|state farm|allstate/]
   ];
   const DISCRETIONARY = new Set(['Dining', 'Coffee', 'Shopping', 'Entertainment', 'Travel', 'Subscriptions']);
